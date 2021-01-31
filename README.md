@@ -95,7 +95,7 @@ mv shell.lua /usr/local/openresty/lualib/resty/lua-resty-shell
 ```
 
 
-### Configuring Network Firewall
+## Configuring Network Firewall
 
 By dropping the IP address at the network interface, we're removing the overhead of OpenResty (CPU) processing the bad requests - greatly improving mitigation throughput.
 
