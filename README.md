@@ -24,7 +24,8 @@
 * Google Recaptcha Challenge
 * Invisible JavaScript Challenge
 * On Detection Mitigation (currently Always On)
-  
+* Automatic Installer Script (Requires Fresh/Vanilla Install)
+
   
 ## Getting Started
 
