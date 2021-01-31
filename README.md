@@ -1,10 +1,6 @@
-# SiteShield OpenResty
-
-Advanced Layer 7 HTTP(s) DDoS Mitigation module for OpenResty ("dynamic web platform based on NGINX and LuaJIT")
-
 <p align="center">
-  <img src="" width="64">
-  <h2 align="center">SiteShield OpenResty</h2>
+  <img src="https://github.com/dbContext/SiteShield-OpenResty/blob/main/docs/siteshield.svg" width="64">
+  <h1 align="center">SiteShield OpenResty</h1>
   <p align="center">Advanced Layer 7 HTTP(s) DDoS Mitigation module for OpenResty ("dynamic web platform based on NGINX and LuaJIT")<p>
   </p>
 </p>
