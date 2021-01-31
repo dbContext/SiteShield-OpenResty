@@ -2,6 +2,13 @@
 
 Advanced Layer 7 HTTP(s) DDoS Mitigation module for OpenResty ("dynamic web platform based on NGINX and LuaJIT")
 
+<p align="center">
+  <img src="" width="64">
+  <h2 align="center">SiteShield OpenResty</h2>
+  <p align="center">Advanced Layer 7 HTTP(s) DDoS Mitigation module for OpenResty ("dynamic web platform based on NGINX and LuaJIT")<p>
+  </p>
+</p>
+
 ## Features
 
 * **Layer 7 DDoS Mitigation** via JavaScript Challenge.
@@ -123,6 +130,8 @@ Lastly, you'll now want to alter your nginx.conf, to utilise `SiteShield.lua`.
 		set $block_ip '';
 		set $allow_uri '';
 		set $block_uri '';
+		set $max_failed_challenge_attempts '5';
+		set $max_time_window_challenges '120';
 
 		location / {
 			content_by_lua_file /usr/local/openresty/nginx/conf/SiteShield.lua;

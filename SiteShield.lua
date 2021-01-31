@@ -28,11 +28,14 @@ local string_sub = string.sub
 local string_gsub = string.gsub
 local string_char = string.char
 
+local maxFailedChallengeAttempts = ngx.var.max_failed_challenge_attempts
+local maxTimeWindowChallenges = ngx.var.max_time_window_challenges
+
 local red = redis:new()
 local ok, err = red:connect("unix:/var/run/siteshield/redis.sock")
 if not ok then
 	ngx.header["Content-type"] = "text/html"
-	ngx.say("failed to connect to redis, please reload to try again.", err)
+	ngx.say("failed to connect to redis, please reload to try again.")
 	return
 end
 
@@ -197,16 +200,16 @@ function CHALLENGE()
 		red:hmset(usr_hash, "hitcount", tonumber(hitcount) + 1, "hitcounttimestamp", os.time())
 	else
 		red:hmset(usr_hash, "hitcount", tonumber(hitcount) + 1)
-		if (tonumber(hitcount) >= 5) then
+		if (tonumber(hitcount) >= tonumber(maxFailedChallengeAttempts)) then
 			local diff = os.time() - timestamp
-			if (tonumber(diff) <= 120) then
+			if (tonumber(diff) <= tonumber(maxTimeWindowChallenges)) then
 				shell.execute("ipset add blacklist " .. remote_ip, shellSockArgs)
 				red:close()
 				ngx.header["Content-type"] = "text/html"	
 				ngx.exit(444)
 				return
 			end
-			if (tonumber(diff) >= 120) then
+			if (tonumber(diff) >= tonumber(maxTimeWindowChallenges)) then
 				red:hmset(usr_hash, "hitcount", "0", "hitcounttimestamp", "0")
 			end
 		end
@@ -288,16 +291,16 @@ function AUTH()
 		red:hmset(usr_hash, "hitcount", tonumber(hitcount) + 1, "hitcounttimestamp", os.time())
 	else
 		red:hmset(usr_hash, "hitcount", tonumber(hitcount) + 1)
-		if (tonumber(hitcount) >= 5) then
+		if (tonumber(hitcount) >= tonumber(maxFailedChallengeAttempts)) then
 			local diff = os.time() - timestamp
-			if (tonumber(diff) <= 120) then
+			if (tonumber(diff) <= tonumber(maxTimeWindowChallenges)) then
 				shell.execute("ipset add blacklist " .. remote_ip, shellSockArgs)
 				red:close()
 				ngx.header["Content-type"] = "text/html"	
 				ngx.exit(444)
 				return
 			end
-			if (tonumber(diff) >= 120) then
+			if (tonumber(diff) >= tonumber(maxTimeWindowChallenges)) then
 				red:hmset(usr_hash, "hitcount", "0", "hitcounttimestamp", "0")
 			end
 		end
@@ -321,7 +324,7 @@ function AUTH()
 	if (tonumber(expectedDiff * 1000) < tonumber(eAT) or tonumber(expectedDiff * 1000) > tonumber(eAT + 1000)) then
 		red:close()
 		ngx.header["Content-type"] = "text/html"
-		ngx.say("Authentication failed, please reload.\r\n\r\nError Code #05")
+		ngx.say("Authentication failed, please reload.")
 		return
 	end
 	
