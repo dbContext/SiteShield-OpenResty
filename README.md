@@ -10,7 +10,7 @@ Below we will go through installing SiteShield-OpenResty on a CentOS 7.9.2009 (C
 
 ## Prerequisites
 
-You'll need to install a few dependencies that SiteShield-OpenResty utilise.
+You'll need to install a few dependencies that SiteShield-OpenResty utilises.
 
 
 ### OpenResty
