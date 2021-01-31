@@ -125,13 +125,13 @@ Lastly, you'll now want to alter your nginx.conf, to utilise `SiteShield.lua`.
 		
     ...
 
-		set $auth_time '24h';
-		set $allow_ip '';
-		set $block_ip '';
-		set $allow_uri '';
-		set $block_uri '';
-		set $max_failed_challenge_attempts '5';
-		set $max_time_window_challenges '120';
+		set $auth_time '86400'; // Time User is Authenticated after Challenge in seconds.
+		set $allow_ip ''; // format: 1.1.1.1;2.2.2.2;3.3.3.3
+		set $block_ip ''; // format: 4.4.4.4;5.5.5.5;6.6.6.6
+		set $allow_uri ''; // format: /allow-this-uri;/also/allow/this/uri
+		set $block_uri ''; // format: /block-this-uri;/also/block/this/uri
+		set $max_failed_challenge_attempts '5'; // Max Failed Challenge Attempts before IP block.
+		set $max_time_window_challenges '120'; // Max Challenges Served in Time Window (e.g. 5 Challenges with in 120 seconds.)
 
 		location / {
 			content_by_lua_file /usr/local/openresty/nginx/conf/SiteShield.lua;

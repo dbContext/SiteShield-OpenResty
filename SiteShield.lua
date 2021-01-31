@@ -128,19 +128,6 @@ function genString(l)
 	return s
 end
 
-function dump(o)
-   if type(o) == 'table' then
-      local s = '{ '
-      for k,v in pairs(o) do
-         if type(k) ~= 'number' then k = '"'..k..'"' end
-         s = s .. '['..k..'] = ' .. dump(v) .. ','
-      end
-      return s .. '} '
-   else
-      return tostring(o)
-   end
-end
-
 function CHALLENGE() 
 	
 	if (string_find(useragent, "WordPress")) then
@@ -329,62 +316,33 @@ function AUTH()
 	end
 	
 	local get_args = ngx.req.get_uri_args(2)
-	local has_question = 0
-	local has_answer = 0
-	local get_question = ""
-	local get_answer = ""
+	local getQuestion = ""
+	local getAnswer = ""
 	
 	for key, val in pairs(get_args) do
 		if (key == "q") then
-			has_question = 1
-			get_question = val
+			getQuestion = val
 		end
 		if (key == "a") then
-			has_answer = 1
-			get_answer = val
+			getAnswer = val
 		end
 	end
 	
-	if (has_question ~= 1 and has_answer ~= 1) then
+	if (getQuestion == "" or getAnswer == "") then
 		red:close()
 		ngx.header["Content-type"] = "text/html"
 		ngx.say("Authentication failed, please reload.")
 	end
 
-	if (get_question ~= correctQuestion) then
+	if (getQuestion ~= correctQuestion or getAnswer ~= correctAnswer) then
 		red:close()
 		ngx.header["Content-type"] = "text/html"
 		ngx.say("Authentication failed, please reload.")
 	end
 
-	if (get_answer ~= correctAnswer) then
-		red:close()
-		ngx.header["Content-type"] = "text/html"
-		ngx.say("Authentication failed, please reload.")
-	end
-
-	local auth_time = ngx.var.auth_time
-	local atime = 300
-		
-	if (auth_time == "5m") then
-		atime = 300
-	elseif (auth_time == "15m") then
-		atime = 900
-	elseif (auth_time == "30m") then
-		atime = 1800
-	elseif (auth_time == "1h") then
-		atime = 3600
-	elseif (auth_time == "3h") then
-		atime = 10800
-	elseif (auth_time == "6h") then
-		atime = 21600
-	elseif (auth_time == "12h") then
-		atime = 43200
-	elseif (auth_time == "24h") then
-		atime = 86400
-	end
+	local authenticationTime = ngx.var.auth_time
 	
-	red:hmset(usr_hash, "auth", "1", "timestamp", os.time() + atime, "question", "0", "answer", "0", "hitcount", "0", "hitcounttimestamp", "0", "questionarg", "0", "answerarg", "0")
+	red:hmset(usr_hash, "auth", "1", "timestamp", os.time() + tonumber(authenticationTime), "question", "0", "answer", "0", "hitcount", "0", "hitcounttimestamp", "0", "questionarg", "0", "answerarg", "0")
 	red:persist(usr_hash)
 	red:close()
 
