@@ -1,17 +1,17 @@
 name: CI
-
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-
   workflow_dispatch:
-
+  
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: luacheck
         uses: nebularg/actions-luacheck@v1.1.0
+        files: SiteShield.lua
+        path: ''
+        args: -qo 011
