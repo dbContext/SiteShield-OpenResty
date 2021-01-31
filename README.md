@@ -65,12 +65,6 @@ unixsocket /var/run/siteshield/redis.sock
 unixsocketperm 777
 ```
 
-Finally, start the redis server.
-
-```
-service redis start
-```
-
 
 ### Sockproc
 
@@ -159,6 +153,15 @@ Lastly, you'll now want to alter your nginx.conf, to utilise `SiteShield.lua`.
   ...
 ```
 
+
+## Ready to go!
+
+If everything above went as expected, after restarting the relevant services (commands below), you'll have a HTTP Reverse Proxy with Layer 7 DDoS Mitigation.
+
+```
+service redis restart
+service openresty restart
+```
 
 ## Contributing
 
