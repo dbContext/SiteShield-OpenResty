@@ -2,13 +2,16 @@
 
 Advanced Layer 7 HTTP(s) DDoS Mitigation module for OpenResty ("dynamic web platform based on NGINX and LuaJIT")
 
+
 ## Getting Started
 
 Below we will go through installing SiteShield-OpenResty on a CentOS 7.9.2009 (Core) linux server, from zero to a fully fledged HTTP reverse proxy, with Layer 7 DDoS Mitigation.
 
+
 ## Prerequisites
 
-You'll need to install a few dependancies that SiteShield-OpenResty utilise.
+You'll need to install a few dependencies that SiteShield-OpenResty utilise.
+
 
 ### OpenResty
 
@@ -18,6 +21,7 @@ sudo mv openresty.repo /etc/yum.repos.d/
 yum check-update
 yum install openresty -y
 ```
+
 
 ### Redis
 
@@ -49,6 +53,7 @@ Finally, start the redis server.
 service redis start
 ```
 
+
 ### Sockproc
 
 ```
@@ -56,6 +61,7 @@ wget https://github.com/juce/sockproc/blob/master/sockproc.c
 gcc sockproc.c -o sockproc
 ./sockproc /var/run/siteshield/shell.sock
 ```
+
 
 ### Shell
 
@@ -65,7 +71,8 @@ wget https://github.com/dbContext/lua-resty-shell/blob/master/lib/resty/shell.lu
 mv shell.lua /usr/local/openresty/lualib/resty/lua-resty-shell
 ```
 
-## Configuring User Groups / Directory Permission for UNIX Sockets
+
+## Configuring User Groups / Directory Permissions for UNIX Sockets
 
 ```
 sudo groupadd siteshield
@@ -75,6 +82,7 @@ sudo usermod -a -G siteshield nginx
 sudo chgrp -R siteshield /var/run/siteshield/
 sudo chmod -R 777 /var/run/siteshield/
 ```
+
 
 ## Installing SiteShield
 
@@ -119,9 +127,11 @@ Lastly, you'll now want to alter your nginx.conf, to utilise `SiteShield.lua`.
   ...
 ```
 
+
 ## Contributing
 
 Please read [CONTRIBUTING](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+
 
 ## Authors
 
@@ -129,9 +139,11 @@ Please read [CONTRIBUTING](CONTRIBUTING.md) for details on our code of conduct, 
 
 See also the list of [contributors](https://github.com/dbContext/SiteShield-OpenResty/contributors) who participated in this project.
 
+
 ## License
 
 This project is licensed under the GPL-3.0 License - see the [LICENSE](LICENSE) file for details
+
 
 ## Acknowledgments
 
