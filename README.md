@@ -10,7 +10,7 @@ Advanced Layer 7 HTTP(s) DDoS Mitigation module for OpenResty ("dynamic web plat
   * Block IP Address
   * Allow URI (Bypass JavaScript Challenge)
   * Block URI
-* SEO Optimised (Popular Search Enginges Bypass JavaScript Challenge)
+* SEO Optimised (Popular Search Engines Bypass JavaScript Challenge)
 * Variable Challenge Authentication Time Window (5m, 15m, 30m, 1h, 3h, 6h, 12h, 24h)
 
 ## Coming Soon
