@@ -2,7 +2,24 @@
 
 Advanced Layer 7 HTTP(s) DDoS Mitigation module for OpenResty ("dynamic web platform based on NGINX and LuaJIT")
 
+## Features
 
+* **Layer 7 DDoS Mitigation** via JavaScript Challenge.
+* Firewall
+  * Allow IP Address (Bypass JavaScript Challenge)
+  * Block IP Address
+  * Allow URI (Bypass JavaScript Challenge)
+  * Block URI
+* SEO Optimised (Popular Search Enginges Bypass JavaScript Challenge)
+* Variable Challenge Authentication Time Window (5m, 15m, 30m, 1h, 3h, 6h, 12h, 24h)
+
+## Coming Soon
+
+* Google Recaptcha Challenge
+* Invisible JavaScript Challenge
+* On Detection Mitigation (currently Always On)
+  
+  
 ## Getting Started
 
 Below we will go through installing SiteShield-OpenResty on a CentOS 7.9.2009 (Core) linux server, from zero to a fully fledged HTTP reverse proxy, with Layer 7 DDoS Mitigation.
