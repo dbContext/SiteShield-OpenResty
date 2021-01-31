@@ -12,5 +12,4 @@ jobs:
       - name: luacheck
         uses: nebularg/actions-luacheck@v1.1.0
         with:
-          files: SiteShield.lua
           args: '-qo 011'
