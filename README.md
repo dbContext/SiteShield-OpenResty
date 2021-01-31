@@ -59,11 +59,6 @@ And now you'll want to alter the redis servers configuration slightly, like belo
 
 File: `/etc/redis.conf`
 
-Change line 84 to disable TCP socket:
-```
-port 0
-```
-
 Uncomment line 101/102, and edit to below:
 ```
 unixsocket /var/run/siteshield/redis.sock
