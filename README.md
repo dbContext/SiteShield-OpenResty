@@ -1,7 +1,7 @@
 <p align="center">
   <img src="https://github.com/dbContext/SiteShield-OpenResty/blob/main/docs/siteshield.svg" width="128">
-  <h1 align="center">SiteShield OpenResty</h1> <img src="https://github.com/dbContext/SiteShield-OpenResty/workflows/CI/badge.svg">
-  
+  <h1 align="center">SiteShield OpenResty</h1>
+  <img align="center" src="https://github.com/dbContext/SiteShield-OpenResty/workflows/CI/badge.svg">
   <p align="center">Advanced Layer 7 HTTP(s) DDoS Mitigation module for OpenResty ("dynamic web platform based on NGINX and LuaJIT")<p>
   </p>
 </p>
