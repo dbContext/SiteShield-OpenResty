@@ -93,6 +93,18 @@ mv shell.lua /usr/local/openresty/lualib/resty/lua-resty-shell
 ```
 
 
+### Configuring Network Firewall
+
+By dropping the IP address at the network interface, we're removing the overhead of OpenResty (CPU) processing the bad requests - greatly improving mitigation throughput.
+
+```
+ipset create siteshield-droplist hash:ip hashsize 4096
+
+iptables -I INPUT -m set --match-set siteshield-droplist src -j DROP
+iptables -I FORWARD -m set --match-set siteshield-droplist src -j DROP
+```
+
+
 ## Configuring User Groups / Directory Permissions for UNIX Sockets
 
 ```

@@ -131,7 +131,7 @@ end
 function CHALLENGE() 
 	
 	if (string_find(useragent, "WordPress")) then
-		shell.execute("ipset add blacklist " .. remote_ip, shellSockArgs)	
+		shell.execute("ipset add siteshield-droplist " .. remote_ip, shellSockArgs)	
 		red:close()
 		ngx.header["Content-type"] = "text/html"
 		ngx.exit(444)
@@ -190,7 +190,7 @@ function CHALLENGE()
 		if (tonumber(hitcount) >= tonumber(maxFailedChallengeAttempts)) then
 			local diff = os.time() - timestamp
 			if (tonumber(diff) <= tonumber(maxTimeWindowChallenges)) then
-				shell.execute("ipset add blacklist " .. remote_ip, shellSockArgs)
+				shell.execute("ipset add siteshield-droplist " .. remote_ip, shellSockArgs)
 				red:close()
 				ngx.header["Content-type"] = "text/html"	
 				ngx.exit(444)
@@ -263,7 +263,7 @@ end
 
 function AUTH() 
 	if (string_find(useragent, "WordPress")) then
-		shell.execute("ipset add blacklist " .. remote_ip, shellSockArgs)
+		shell.execute("ipset add siteshield-droplist " .. remote_ip, shellSockArgs)
 		red:close()
 		ngx.header["Content-type"] = "text/html"
 		ngx.exit(444)
@@ -281,7 +281,7 @@ function AUTH()
 		if (tonumber(hitcount) >= tonumber(maxFailedChallengeAttempts)) then
 			local diff = os.time() - timestamp
 			if (tonumber(diff) <= tonumber(maxTimeWindowChallenges)) then
-				shell.execute("ipset add blacklist " .. remote_ip, shellSockArgs)
+				shell.execute("ipset add siteshield-droplist " .. remote_ip, shellSockArgs)
 				red:close()
 				ngx.header["Content-type"] = "text/html"	
 				ngx.exit(444)
