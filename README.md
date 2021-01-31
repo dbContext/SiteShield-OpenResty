@@ -4,7 +4,7 @@ Advanced Layer 7 HTTP(s) DDoS Mitigation module for OpenResty ("dynamic web plat
 
 ## Getting Started
 
-Below we will go through installing SiteShield-OpenResty on a CentOS 7.9.2009 (Core) linux server, from stratch to a fully fledged HTTP reverse proxy, with Layer 7 DDoS Mitigation.
+Below we will go through installing SiteShield-OpenResty on a CentOS 7.9.2009 (Core) linux server, from zero to a fully fledged HTTP reverse proxy, with Layer 7 DDoS Mitigation.
 
 ## Prerequisites
 
