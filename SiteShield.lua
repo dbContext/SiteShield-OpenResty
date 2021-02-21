@@ -32,14 +32,14 @@ local maxFailedChallengeAttempts = ngx.var.max_failed_challenge_attempts
 local maxTimeWindowChallenges = ngx.var.max_time_window_challenges
 
 local red = redis:new()
-local ok, err = red:connect("unix:/var/run/siteshield/redis.sock")
+local ok, err = red:connect("127.0.0.1", 6379)
 if not ok then
 	ngx.header["Content-type"] = "text/html"
 	ngx.say("failed to connect to redis, please reload to try again.")
 	return
 end
 
-local shellSockArgs = { socket = "unix:/var/run/siteshield/shell.sock" }
+local shellSockArgs = { socket = "unix:/tmp/shell.sock" }
 
 function GENINT()
 	local randloop = math_random(10)

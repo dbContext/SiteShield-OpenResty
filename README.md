@@ -36,6 +36,9 @@ Below we will go through installing SiteShield-OpenResty on a CentOS 7.9.2009 (C
 
 You'll need to install a few dependencies that SiteShield-OpenResty utilises.
 
+```
+yum install gcc ipset iptables -y
+```
 
 ### OpenResty
 
@@ -44,6 +47,7 @@ wget https://openresty.org/package/centos/openresty.repo
 sudo mv openresty.repo /etc/yum.repos.d/
 yum check-update
 yum install openresty -y
+useradd -r nginx
 ```
 
 
@@ -56,23 +60,14 @@ yum install epel-release -y
 yum install redis -y
 ```
 
-And now you'll want to alter the redis servers configuration slightly, like below:
-
-File: `/etc/redis.conf`
-
-Uncomment line 101/102, and edit to below:
-```
-unixsocket /var/run/siteshield/redis.sock
-unixsocketperm 777
-```
-
 
 ### Sockproc
 
 ```
-wget https://github.com/juce/sockproc/blob/master/sockproc.c
+wget https://raw.githubusercontent.com/dbContext/sockproc/master/sockproc.c
 gcc sockproc.c -o sockproc
-./sockproc /var/run/siteshield/shell.sock
+./sockproc /tmp/shell.sock
+chmod +x /tmp/shell.sock
 ```
 
 
@@ -80,7 +75,7 @@ gcc sockproc.c -o sockproc
 
 ```
 mkdir /usr/local/openresty/lualib/resty/lua-resty-shell
-wget https://github.com/dbContext/lua-resty-shell/blob/master/lib/resty/shell.lua
+wget https://raw.githubusercontent.com/dbContext/lua-resty-shell/master/lib/resty/shell.lua
 mv shell.lua /usr/local/openresty/lualib/resty/lua-resty-shell
 ```
 
@@ -94,18 +89,6 @@ ipset create siteshield-droplist hash:ip hashsize 4096
 
 iptables -I INPUT -m set --match-set siteshield-droplist src -j DROP
 iptables -I FORWARD -m set --match-set siteshield-droplist src -j DROP
-```
-
-
-## Configuring User Groups / Directory Permissions for UNIX Sockets
-
-```
-sudo groupadd siteshield
-sudo usermod -a -G siteshield redis
-sudo usermod -a -G siteshield nginx
-
-sudo chgrp -R siteshield /var/run/siteshield/
-sudo chmod -R 777 /var/run/siteshield/
 ```
 
 
@@ -126,13 +109,13 @@ Lastly, you'll now want to alter your nginx.conf, to utilise `SiteShield.lua`.
 		
     ...
 
-		set $auth_time '86400'; // Time User is Authenticated after Challenge in seconds.
-		set $allow_ip ''; // format: 1.1.1.1;2.2.2.2;3.3.3.3
-		set $block_ip ''; // format: 4.4.4.4;5.5.5.5;6.6.6.6
-		set $allow_uri ''; // format: /allow-this-uri;/also/allow/this/uri
-		set $block_uri ''; // format: /block-this-uri;/also/block/this/uri
-		set $max_failed_challenge_attempts '5'; // Max Failed Challenge Attempts before IP block.
-		set $max_time_window_challenges '120'; // Max Challenges Served in Time Window (e.g. 5 Challenges with in 120 seconds.)
+		set $auth_time '86400'; # Time User is Authenticated after Challenge in seconds.
+		set $allow_ip ''; # format: 1.1.1.1;2.2.2.2;3.3.3.3
+		set $block_ip ''; # format: 4.4.4.4;5.5.5.5;6.6.6.6
+		set $allow_uri ''; # format: /allow-this-uri;/also/allow/this/uri
+		set $block_uri ''; # format: /block-this-uri;/also/block/this/uri
+		set $max_failed_challenge_attempts '5'; # Max Failed Challenge Attempts before IP block.
+		set $max_time_window_challenges '120'; # Max Challenges Served in Time Window (e.g. 5 Challenges with in 120 seconds.)
 
 		location / {
 			content_by_lua_file /usr/local/openresty/nginx/conf/SiteShield.lua;
