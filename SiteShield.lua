@@ -159,7 +159,7 @@ function CHALLENGE()
 			
 			if (string_find(resolvedIP, remote_ip)) then
 				
-				red:hmset(usr_hash, "auth", "1", "timestamp", os.time() + 7200, "question", "0", "answer", "0", "hitcount", "0", "hitcounttimestamp", "0", "questionarg", "0", "answerarg", "0")
+				red:hmset(usr_hash, "auth", 1, "timestamp", os.time() + 7200, "question", 0, "answer", 0, "hitcount", 0, "hitcounttimestamp", 0, "questionarg", 0, "answerarg", 0)
 				red:persist(usr_hash)
 				red:close()	
 					
@@ -184,9 +184,9 @@ function CHALLENGE()
 	local timestamp = res[2]
 	
 	if tonumber(hitcount) == 0 then
-		red:hmset(usr_hash, "hitcount", tonumber(hitcount) + 1, "hitcounttimestamp", os.time())
+		red:hmset(usr_hash, "hitcount", 1, "hitcounttimestamp", os.time())
 	else
-		red:hmset(usr_hash, "hitcount", tonumber(hitcount) + 1)
+		red:hincrby(usr_hash, "hitcount", 1)
 		if (tonumber(hitcount) >= tonumber(maxFailedChallengeAttempts)) then
 			local diff = os.time() - timestamp
 			if (tonumber(diff) <= tonumber(maxTimeWindowChallenges)) then
@@ -197,7 +197,7 @@ function CHALLENGE()
 				return
 			end
 			if (tonumber(diff) >= tonumber(maxTimeWindowChallenges)) then
-				red:hmset(usr_hash, "hitcount", "0", "hitcounttimestamp", "0")
+				red:hmset(usr_hash, "hitcount", 0, "hitcounttimestamp", 0)
 			end
 		end
 	end
@@ -275,9 +275,9 @@ function AUTH()
 	local timestamp = res[2]
 	
 	if tonumber(hitcount) == 0 then
-		red:hmset(usr_hash, "hitcount", tonumber(hitcount) + 1, "hitcounttimestamp", os.time())
+		red:hmset(usr_hash, "hitcount", 1, "hitcounttimestamp", os.time())
 	else
-		red:hmset(usr_hash, "hitcount", tonumber(hitcount) + 1)
+		red:hincrby(usr_hash, "hitcount", 1)
 		if (tonumber(hitcount) >= tonumber(maxFailedChallengeAttempts)) then
 			local diff = os.time() - timestamp
 			if (tonumber(diff) <= tonumber(maxTimeWindowChallenges)) then
@@ -288,7 +288,7 @@ function AUTH()
 				return
 			end
 			if (tonumber(diff) >= tonumber(maxTimeWindowChallenges)) then
-				red:hmset(usr_hash, "hitcount", "0", "hitcounttimestamp", "0")
+				red:hmset(usr_hash, "hitcount", 0, "hitcounttimestamp", 0)
 			end
 		end
 	end
@@ -302,13 +302,13 @@ function AUTH()
 	if res then 
 		correctQuestion = res[1]
 		correctAnswer = res[2]
-		eAT = res[3]
+		eAT = tonumber(res[3])
 		eATTime = res[4]
 	end
 	
-	local expectedDiff = os.time() - eATTime
-	local eATPlusOne = eAT + 1
-	if (tonumber(expectedDiff * 1000) < tonumber(eAT) or tonumber(expectedDiff * 1000) > tonumber(eAT + 1000)) then
+	local expectedDiff = tonumber((os.time() - eATTime) * 1000)
+	local eATSec = tonumber(eAT + 1000)
+	if (expectedDiff < eAT or expectedDiff > eATSec) then
 		red:close()
 		ngx.header["Content-type"] = "text/html"
 		ngx.say("Authentication failed, please reload.")
@@ -327,22 +327,19 @@ function AUTH()
 			getAnswer = val
 		end
 	end
-	
-	if (getQuestion == "" or getAnswer == "") then
+
+	if (getQuestion == "" or 
+		getAnswer == "" or 
+		getQuestion ~= correctQuestion or 
+		getAnswer ~= correctAnswer) then
 		red:close()
 		ngx.header["Content-type"] = "text/html"
 		ngx.say("Authentication failed, please reload.")
 	end
 
-	if (getQuestion ~= correctQuestion or getAnswer ~= correctAnswer) then
-		red:close()
-		ngx.header["Content-type"] = "text/html"
-		ngx.say("Authentication failed, please reload.")
-	end
-
-	local authenticationTime = ngx.var.auth_time
+	local authenticationTime = tonumber(ngx.var.auth_time)
 	
-	red:hmset(usr_hash, "auth", "1", "timestamp", os.time() + tonumber(authenticationTime), "question", "0", "answer", "0", "hitcount", "0", "hitcounttimestamp", "0", "questionarg", "0", "answerarg", "0")
+	red:hmset(usr_hash, "auth", 1, "timestamp", os.time() + authenticationTime, "question", 0, "answer", 0, "hitcount", 0, "hitcounttimestamp", 0, "questionarg", 0, "answerarg", 0)
 	red:persist(usr_hash)
 	red:close()
 
@@ -398,7 +395,7 @@ end
 local res, err = red:get(usr_hash)
 
 if (res == ngx.null) then
-	red:hmset(usr_hash, "auth", "0", "timestamp", "0", "question", "0", "answer", "0", "hitcount", "0", "hitcounttimestamp", "0")
+	red:hmset(usr_hash, "auth", 0, "timestamp", 0, "question", 0, "answer", 0, "hitcount", 0, "hitcounttimestamp", 0)
 	red:expire(usr_hash, 300)
 	auth = 0
 	timestamp = 0
@@ -418,7 +415,7 @@ end
 
 if (tonumber(auth) == 1) then 
 	if (tonumber(timestamp) < os.time()) then 
-		red:hmset(usr_hash, "auth", "0", "timestamp", "0", "question", "0", "answer", "0", "hitcount", "0", "hitcounttimestamp", "0")
+		red:hmset(usr_hash, "auth", 0, "timestamp", 0, "question", 0, "answer", 0, "hitcount", 0, "hitcounttimestamp", 0)
 		CHALLENGE()
 		return
 	end
