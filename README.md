@@ -97,7 +97,7 @@ iptables -I FORWARD -m set --match-set siteshield-droplist src -j DROP
 First, download `SiteShield.lua` to the relevant OpenResty/Nginx Directory.
 
 ```
-wget https://github.com/dbContext/SiteShield-OpenResty/blob/main/SiteShield.lua
+wget https://raw.githubusercontent.com/dbContext/SiteShield-OpenResty/main/SiteShield.lua
 mv SiteShield.lua /usr/local/openresty/nginx/conf
 ```
 
