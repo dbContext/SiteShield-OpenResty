@@ -37,7 +37,7 @@ Below we will go through installing SiteShield-OpenResty on a CentOS 7.9.2009 (C
 You'll need to install a few dependencies that SiteShield-OpenResty utilises.
 
 ```
-yum install gcc ipset iptables -y
+yum install gcc ipset iptables bind-utils -y
 ```
 
 ### OpenResty
