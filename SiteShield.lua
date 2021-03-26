@@ -335,6 +335,7 @@ function AUTH()
 		red:close()
 		ngx.header["Content-type"] = "text/html"
 		ngx.say("Authentication failed, please reload.")
+		return
 	end
 
 	local authenticationTime = tonumber(ngx.var.auth_time)
